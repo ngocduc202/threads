@@ -1,6 +1,8 @@
 import User from "../models/userModel.js"
 import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js"
+import {v2 as cloudinary} from 'cloudinary'
+import Post from "../models/postModel.js"
 
 
 export const getUserProfile = async (req, res) => {
@@ -43,7 +45,9 @@ export const signupUser = async (req, res) => {
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
-        username: newUser.username
+        username: newUser.username,
+        bio: newUser.bio,
+        profilePic: newUser.profilePic
       })
     } else{
       res.status(400).json({error: "Invalid user data"})
@@ -70,7 +74,9 @@ export const loginUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      username: user.username
+      username: user.username,
+      bio: user.bio,
+      profilePic: user.profilePic
     })
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -124,36 +130,59 @@ export const followUnfollowUser = async (req, res) => {
 }
 
 export const updateUser = async (req, res) => {
-  const {name , email, username , password , profilePic ,bio} = req.body
-  const userId = req.user._id
-  try {
-    let user = await User.findById(userId)
-    if(!user){
-      return res.status(404).json({error: "User not found"})
-    }
+	const { name, email, username, password, bio } = req.body;
+	let { profilePic } = req.body;
 
-    if(req.params.id !== userId.toString()){
-      return res.status(403).json({error: "You can only update your own profile"})
-    }
+	const userId = req.user._id;
+	try {
+		let user = await User.findById(userId);
+		if (!user) return res.status(400).json({ error: "User not found" });
 
-    if(password){
-      const salt = await bcrypt.genSalt(10)
-      const hashedPassword = await bcrypt.hash(password, salt)
-      user.password = hashedPassword
-    }
+		if (req.params.id !== userId.toString())
+			return res.status(400).json({ error: "You cannot update other user's profile" });
 
-    user.name = name || user.name
-    user.email = email || user.email
-    user.username = username || user.username
-    user.profilePic = profilePic || user.profilePic
-    user.bio = bio || user.bio
+		if (password) {
+			const salt = await bcrypt.genSalt(10);
+			const hashedPassword = await bcrypt.hash(password, salt);
+			user.password = hashedPassword;
+		}
 
-    user = await user.save()
+		if (profilePic) {
+			if (user.profilePic) {
+				await cloudinary.uploader.destroy(user.profilePic.split("/").pop().split(".")[0]);
+			}
 
-    res.status(200).json({message: "Profile updated successfully", user})
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-    console.log("Error in updateUser: ", error.message)
-  }
-}
+			const uploadedResponse = await cloudinary.uploader.upload(profilePic);
+			profilePic = uploadedResponse.secure_url;
+		}
+
+		user.name = name || user.name;
+		user.email = email || user.email;
+		user.username = username || user.username;
+		user.profilePic = profilePic || user.profilePic;
+		user.bio = bio || user.bio;
+
+		user = await user.save();
+
+		// Find all posts that this user replied and update username and userProfilePic fields
+		await Post.updateMany(
+			{ "replies.userId": userId },
+			{
+				$set: {
+					"replies.$[reply].username": user.username,
+					"replies.$[reply].userProfilePic": user.profilePic,
+				},
+			},
+			{ arrayFilters: [{ "reply.userId": userId }] }
+		);
+
+		// password should be null in response
+		user.password = null;
+
+		res.status(200).json(user);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+		console.log("Error in updateUser: ", err.message);
+	}
+};
 
