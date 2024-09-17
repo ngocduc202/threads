@@ -3,12 +3,18 @@ import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js"
 import {v2 as cloudinary} from 'cloudinary'
 import Post from "../models/postModel.js"
+import mongoose from "mongoose"
 
 
 export const getUserProfile = async (req, res) => {
-  const {username} = req.params
+  const {query} = req.params
   try {
-    const user = await User.findOne({username}).select("-password").select("-updatedAt")
+    let user
+    if(mongoose.Types.ObjectId.isValid(query)){
+      user = await User.findOne({_id: query}).select("-password").select("-updatedAt")
+    }else{
+      user = await User.findOne({username: query}).select("-password").select("-updatedAt")
+    }
     if(!user) return res.status(400).json({error: "User not found"})
     res.status(200).json({user})
   } catch (error) {
