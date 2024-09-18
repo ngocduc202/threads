@@ -4,12 +4,15 @@ import { Link, useNavigate } from 'react-router-dom'
 import Actions from './Actions'
 import useShowToast from '../hooks/useShowToast'
 import { formatDistanceToNow } from "date-fns"
+import { DeleteIcon } from "@chakra-ui/icons"
+import { useRecoilValue } from 'recoil'
+import userAtom from '../atoms/userAtom'
 
 const Post = ({ post, postedBy }) => {
-  const [liked, setLiked] = useState(false)
   const [user, setUser] = useState(null)
   const showToast = useShowToast()
   const navigate = useNavigate()
+  const currentUser = useRecoilValue(userAtom)
 
   useEffect(() => {
     const getUser = async () => {
@@ -29,6 +32,24 @@ const Post = ({ post, postedBy }) => {
 
     getUser()
   }, [postedBy, showToast])
+
+  const handleDeletePost = async (e) => {
+    try {
+      e.preventDefault()
+      if (!window.confirm("Are you sure you want to delete this post?")) return
+      const res = await fetch(`/api/posts/${post._id}`, {
+        method: "DELETE",
+      })
+      const data = await res.json()
+      if (data.error) {
+        showToast("Error", data.error, "error")
+        return
+      }
+      showToast("Success", "Post deleted successfully", "success")
+    } catch (error) {
+      showToast("Error", error.message, "error")
+    }
+  }
 
   if (!user) return null
 
@@ -97,6 +118,10 @@ const Post = ({ post, postedBy }) => {
             </Flex>
             <Flex gap={4} alignItems={"center"}>
               <Text fontSize={"xs"} w={36} textAlign={"right"} color={"gray.light"}>{formatDistanceToNow(new Date(post?.createdAt))} ago</Text>
+
+              {currentUser?._id === user?._id && (
+                <DeleteIcon size={20} onClick={handleDeletePost} />
+              )}
             </Flex>
           </Flex>
           <Text fontSize={"sm"}>{post?.text}</Text>
@@ -110,12 +135,7 @@ const Post = ({ post, postedBy }) => {
             </Box>
           )}
           <Flex gap={3} my={1}>
-            <Actions liked={liked} setLiked={setLiked} />
-          </Flex>
-          <Flex gap={2} alignItems={"center"}>
-            <Text color={"gray.light"} fontSize={"sm"}>{post?.replies.length} Replies</Text>
-            <Box w={0.5} h={0.5} bg={"gray.light"} borderRadius={"full"}></Box>
-            <Text color={"gray.light"} fontSize={"sm"}>{post?.likes.length} Likes</Text>
+            <Actions post={post} />
           </Flex>
         </Flex>
       </Flex>
