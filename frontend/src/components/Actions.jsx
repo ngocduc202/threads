@@ -85,6 +85,7 @@ const Actions = ({ post: post_ }) => {
           role='img'
           viewBox='0 0 24 22'
           width='20'
+          cursor={"pointer"}
           onClick={handleLikeAndUnlike}
         >
           <path
@@ -96,6 +97,7 @@ const Actions = ({ post: post_ }) => {
 
         <svg aria-label='Comment' color='' fill='' height='20' role='img' viewBox='0 0 24 24' width='20'
           onClick={onOpen}
+          cursor={"pointer"}
         >
           <title>Comment</title>
           <path
@@ -157,6 +159,7 @@ const RepostSVG = () => {
       role='img'
       viewBox='0 0 24 24'
       width='20'
+      cursor={"pointer"}
     >
       <title>Repost</title>
       <path
@@ -177,6 +180,7 @@ const ShareSVG = () => {
       role='img'
       viewBox='0 0 24 24'
       width='20'
+      cursor={"pointer"}
     >
       <title>Share</title>
       <line
