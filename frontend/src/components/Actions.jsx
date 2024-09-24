@@ -1,14 +1,15 @@
 import { Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import React, { useState } from 'react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../hooks/useShowToast'
+import postsAtom from '../atoms/postAtom';
 
-const Actions = ({ post: post_ }) => {
+const Actions = ({ post }) => {
   const user = useRecoilValue(userAtom)
   const showToast = useShowToast()
-  const [liked, setLiked] = useState(post_?.likes.includes(user?._id))
-  const [post, setPost] = useState(post_)
+  const [liked, setLiked] = useState(post?.likes.includes(user?._id))
+  const [posts, setPosts] = useRecoilState(postsAtom)
   const [reply, setReply] = useState("")
   const [isReplying, setIsReplying] = useState(false)
   const [isLiking, setIsLiking] = useState(false)
@@ -34,9 +35,21 @@ const Actions = ({ post: post_ }) => {
         return
       }
       if (!liked) {
-        setPost({ ...post, likes: [...post?.likes, user._id] })
+        const updatedPosts = posts.map(p => {
+          if (p._id === post._id) {
+            return { ...p, likes: [...p.likes, user._id] }
+          }
+          return p
+        })
+        setPosts(updatedPosts)
       } else {
-        setPost({ ...post, likes: post?.likes.filter(id => id !== user._id) })
+        const updatedPosts = posts.map(p => {
+          if (p._id === post._id) {
+            return { ...p, likes: p.likes.filter(l => l !== user._id) }
+          }
+          return p
+        })
+        setPosts(updatedPosts)
       }
 
       setLiked(!liked)
@@ -50,7 +63,7 @@ const Actions = ({ post: post_ }) => {
   const handleReply = async () => {
     if (!user) return showToast("Error", "Please login to reply to a post", "error")
     if (isReplying) return
-    setIsLiking(true)
+    setIsReplying(true)
     try {
       const res = await fetch(`/api/posts/reply/${post._id}`, {
         method: "PUT",
@@ -63,14 +76,20 @@ const Actions = ({ post: post_ }) => {
       if (data.error) {
         showToast("Error", data.error, "error")
       }
-      setPost({ ...post, replies: [...post.replies, data.reply] })
+      const updatedPosts = posts.map(p => {
+        if (p._id === post._id) {
+          return { ...p, replies: [...p.replies, data] }
+        }
+        return p
+      })
+      setPosts(updatedPosts)
       showToast("Success", "Reply posted successfully", "success")
       onClose()
       setReply("")
     } catch (error) {
       showToast("Error", error.message, "error")
     } finally {
-      setIsLiking(false)
+      setIsReplying(false)
     }
   }
 
