@@ -48,7 +48,7 @@ const Conversation = ({ conversation, isOnline }) => {
               <BsCheck2All size={16} />
             </Box>
           ) : ""}
-          {lastMessage?.text.length > 20 ? lastMessage?.text.substring(0, 18) + "..." : lastMessage?.text}
+          {lastMessage?.text.length > 20 ? lastMessage?.text.substring(0, 18) + "..." : lastMessage?.text || 'Sent a photo'}
         </Text>
       </Stack>
     </Flex>
