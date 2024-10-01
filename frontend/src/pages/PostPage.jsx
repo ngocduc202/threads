@@ -71,7 +71,7 @@ const PostPage = () => {
   if (!currentPost) return null
 
   return (
-    <>
+    <Box p={4}>
       <Flex>
         <Flex w={"full"} alignItems={"center"} gap={3}>
           <Avatar src={user?.profilePic} size={"md"} name={user?.username} />
@@ -123,7 +123,7 @@ const PostPage = () => {
           lastReply={reply._id === currentPost.replies[currentPost.replies.length - 1]?._id}
         />
       ))}
-    </>
+    </Box>
   )
 }
 export default PostPage

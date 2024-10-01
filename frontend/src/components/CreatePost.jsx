@@ -14,7 +14,7 @@ import data from '@emoji-mart/data'
 
 const MAX_CHAR = 500
 
-const CreatePost = () => {
+const CreatePost = ({ post }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [postText, setPostText] = useState("")
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -82,7 +82,7 @@ const CreatePost = () => {
         onClick={onOpen}
         size={{ base: "sm", sm: "md" }}
       >
-        <AddIcon />
+        {post ? "Post" : <AddIcon />}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

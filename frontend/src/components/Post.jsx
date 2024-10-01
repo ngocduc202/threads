@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Image, Text } from '@chakra-ui/react'
+import { Avatar, Box, Divider, Flex, Image, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Actions from './Actions'
@@ -142,6 +142,7 @@ const Post = ({ post, postedBy }) => {
           </Flex>
         </Flex>
       </Flex>
+      <Divider w={"full"} />
     </Link>
   )
 }

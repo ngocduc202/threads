@@ -1,16 +1,18 @@
-import { Box, Button, Flex, Spinner } from '@chakra-ui/react'
+import { Avatar, Box, Button, Divider, Flex, Spinner, Text } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import useShowToast from '../hooks/useShowToast'
 import Post from '../components/Post'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import postsAtom from '../atoms/postAtom'
 import SuggestedUsers from '../components/SuggestedUsers'
+import userAtom from '../atoms/userAtom'
+import CreatePost from '../components/CreatePost'
 
 const HomePage = () => {
   const showToast = useShowToast()
   const [posts, setPosts] = useRecoilState(postsAtom)
   const [loading, setLoading] = useState(true)
-
+  const user = useRecoilValue(userAtom)
 
   useEffect(() => {
     const getFeedPosts = async () => {
@@ -38,7 +40,17 @@ const HomePage = () => {
 
   return (
     <Flex gap="10" alignItems="flex-start" p={6}>
-      <Box flex={70}>
+      <Box flex={70} border={{ base: "none", md: "1px" }} borderRadius={{ base: "none", md: "2xl" }} borderColor={{ base: "none", md: "gray.600" }} p={{ base: 0, md: 6 }} bg={{ base: "none", md: "dark" }} >
+        <Flex gap={3} alignItems={"center"} justifyItems={"center"} my={2} justifyContent={"space-between"}>
+          <Flex gap={3} alignItems={"center"} justifyItems={"center"}>
+            <Avatar src={user?.profilePic} size={"md"} />
+            <Text textColor={"gray.300"}>What's new ?</Text>
+          </Flex>
+          <CreatePost post={true} />
+        </Flex>
+
+        <Divider mt={5} w={"full"} />
+
         {!loading && posts.length === 0 && (
           <h1>Follow some users to see their posts</h1>
         )}
