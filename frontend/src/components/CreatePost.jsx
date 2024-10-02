@@ -84,9 +84,9 @@ const CreatePost = ({ post }) => {
       >
         {post ? "Post" : <AddIcon />}
       </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "xl" }} isCentered>
         <ModalOverlay />
-        <ModalContent borderRadius={{ base: "none", md: "2xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={useColorModeValue("gray.200", "gray.dark")} w={"full"}>
+        <ModalContent borderRadius={{ base: "none", md: "2xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={useColorModeValue("gray.200", "gray.dark")}>
           <ModalHeader textAlign={"center"} p={3} >
             <ModalCloseButton alignItems={"center"} mt={1} size={"md"} />
             New thread
@@ -144,8 +144,8 @@ const CreatePost = ({ post }) => {
             )}
 
             {imgUrl && (
-              <Flex mt={5} w={"full"} position={"relative"}>
-                <Image src={imgUrl} alt='post' />
+              <Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
+                <Image src={imgUrl} alt='post' objectFit={"contain"} w={"200px"} h={"200px"} />
                 <CloseButton
                   onClick={() => setImgUrl('')}
                   bg={"gray.800"}
@@ -157,7 +157,10 @@ const CreatePost = ({ post }) => {
             )}
           </ModalBody>
 
-          <ModalFooter>
+          <ModalFooter display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+            <Text fontSize={"md"} color={"gray.500"}>
+              Anyone can reply & quote
+            </Text>
             <Button colorScheme='black' mr={3} onClick={handleCreatePost} isLoading={loading} _hover={{ opacity: ".8" }} border={"1px solid gray"} borderRadius={"lg"}>
               <Text fontWeight={"bold"} color={"white"} px={2} py={2}>
                 Post

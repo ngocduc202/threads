@@ -1,9 +1,10 @@
-import { Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from '@chakra-ui/react';
-import React, { useState } from 'react'
+import { Avatar, Box, Button, Divider, Flex, FormControl, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../hooks/useShowToast'
 import postsAtom from '../atoms/postAtom';
+import { BsFillImageFill } from 'react-icons/bs';
 
 const Actions = ({ post }) => {
   const user = useRecoilValue(userAtom)
@@ -13,6 +14,7 @@ const Actions = ({ post }) => {
   const [reply, setReply] = useState("")
   const [isReplying, setIsReplying] = useState(false)
   const [isLiking, setIsLiking] = useState(false)
+  const [userPost, setUserPost] = useState(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
 
@@ -93,6 +95,26 @@ const Actions = ({ post }) => {
     }
   }
 
+
+  const getUser = async () => {
+    try {
+      const res = await fetch(`/api/users/profile/${post?.postedBy}`)
+      const data = await res.json()
+      if (data.error) {
+        showToast("Error", data.error, "error")
+        return
+      }
+      setUserPost(data.user)
+    } catch (error) {
+      showToast("Error", error.message, "error")
+      setUserPost(null)
+    }
+  }
+
+
+
+  console.log("post ", post)
+
   return (
     <Flex flexDirection={"column"}>
       <Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
@@ -115,7 +137,10 @@ const Actions = ({ post }) => {
         </svg>
 
         <svg aria-label='Comment' color='' fill='' height='20' role='img' viewBox='0 0 24 24' width='20'
-          onClick={onOpen}
+          onClick={() => {
+            onOpen()
+            getUser()
+          }}
           cursor={"pointer"}
         >
           <title>Comment</title>
@@ -138,24 +163,58 @@ const Actions = ({ post }) => {
       </Flex>
 
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "xl" }} isCentered>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader></ModalHeader>
+        <ModalContent borderRadius={{ base: "none", md: "2xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={useColorModeValue("gray.200", "gray.dark")} w={"full"}>
+          <ModalHeader textAlign={"center"} p={3} fontSize={"lg"} >Thread Reply</ModalHeader>
           <ModalCloseButton />
+          <Divider my={1} />
           <ModalBody pb={6}>
-            <FormControl>
-              <Input
-                placeholder='Reply here..'
-                value={reply}
-                onChange={(e) => setReply(e.target.value)}
-              />
-            </FormControl>
+            <Box h={"full"} w={"full"} display={"flex"} flexDirection={"column"} >
+              <Flex gap={3} textAlign={"left"} >
+                <Avatar name={userPost?.username} src={userPost?.profilePic} size={"md"} />
+                <Box>
+                  <Text fontWeight={"bold"}>{userPost?.username}</Text>
+                  <Text>{post?.text}</Text>
+                  {post?.img && (
+                    <Image src={post?.img} alt='post img' borderRadius={"xl"} w={"400px"} h={"200px"} mt={3} />
+                  )}
+                </Box>
+              </Flex>
+              <Divider my={3} />
+              <Flex gap={3} mt={2} textAlign={"left"}>
+                <Avatar src={user?.profilePic} name={user?.name} size={"md"} />
+                <FormControl>
+                  <Flex justifyContent={"center"} flexDirection={"column"} >
+                    <Text ml={1} fontSize={"sm"} color={"light.800"}>
+                      <b>{user?.username}</b>
+                    </Text>
+                    <Input
+                      placeholder={`Reply to ${userPost?.username}...`}
+                      value={reply}
+                      onChange={(e) => setReply(e.target.value)}
+                      border={"none"}
+                      _focusVisible={{ outline: "none" }}
+                      p={1}
+                    />
+                  </Flex>
+                  <Button size={"lg"} onClick={() => setShowEmojiPicker((prev) => !prev)} bg={"none"} _hover={"none"} display={{ base: "none", md: "block" }} >
+                    😊
+                  </Button>
+                </FormControl>
+              </Flex>
+            </Box>
+
           </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
-              Reply
+          <ModalFooter display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+            <Text fontSize={"md"} color={"gray.500"}>
+              Anyone can reply & quote
+            </Text>
+            <Button colorScheme='black' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply} _hover={{ opacity: ".8" }} border={"1px solid gray"} borderRadius={"lg"} px={5} py={5}>
+              <Text fontWeight={"bold"} color={"white"} textAlign={"center"}>
+                Reply
+              </Text>
             </Button>
           </ModalFooter>
         </ModalContent>
