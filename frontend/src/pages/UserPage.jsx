@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UserHeader from '../components/UserHeader'
 import { useParams } from 'react-router-dom'
 import useShowToast from '../hooks/useShowToast'
-import { Flex, Spinner } from '@chakra-ui/react'
+import { Box, Flex, Spinner, Text, useColorModeValue } from '@chakra-ui/react'
 import Post from '../components/Post'
 import useGetUserProfile from '../hooks/useGetUserProfile'
 import { useRecoilState } from 'recoil'
@@ -46,19 +46,24 @@ const UserPage = () => {
   if (!user && !loading) return <h1>User not found</h1>
   return (
     <>
-      <UserHeader user={user} />
-      {!fetchingPost && posts?.length === 0 && <h1>User has no posts.</h1>}
-      {fetchingPost && (
-        <Flex justifyContent={"center"}>
-          <Spinner
-            size="xl"
-          />
-        </Flex>
-      )}
+      <Text fontWeight={"bold"} fontSize={{ base: "md", md: "xl" }} textAlign={"center"} w={"full"} pt={2} mb={4}>
+        Profile
+      </Text>
+      <Box borderRadius={{ base: "none", md: "3xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={useColorModeValue("gray.200", "gray.dark")} p={6} >
+        <UserHeader user={user} />
+        {!fetchingPost && posts?.length === 0 && <h1>User has no posts.</h1>}
+        {fetchingPost && (
+          <Flex justifyContent={"center"}>
+            <Spinner
+              size="xl"
+            />
+          </Flex>
+        )}
 
-      {posts?.map((post) => (
-        <Post key={post._id} post={post} postedBy={post?.postedBy} />
-      ))}
+        {posts?.map((post) => (
+          <Post key={post._id} post={post} postedBy={post?.postedBy} />
+        ))}
+      </Box>
     </>
   )
 }

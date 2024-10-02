@@ -28,82 +28,88 @@ const UserHeader = ({ user }) => {
 
 
   return (
-    <VStack gap={4} align={"start"} pt={5}>
-      <Flex justifyContent={"space-between"} w={"full"}>
-        <Box>
-          <Text fontSize={{ base: "lg", md: "2xl" }} fontWeight={"bold"}>{user?.name}</Text>
+    <>
+      <VStack gap={4} align={"start"} pt={5}>
+        <Flex justifyContent={"space-between"} w={"full"}>
+          <Box>
+            <Text fontSize={{ base: "lg", md: "2xl" }} fontWeight={"bold"}>{user?.name}</Text>
+            <Flex gap={2} alignItems={"center"}>
+              <Text fontSize={{ base: "sm", md: "md" }}>{user?.username}</Text>
+              <Text fontSize={"sm"} bg={"gray.dark"} color={"gray.light"} p={1} borderRadius={"full"} >threads.net</Text>
+            </Flex>
+          </Box>
+          <Box>
+            {user?.profilePic && (
+              <Avatar
+                name={user?.name}
+                src={user?.profilePic}
+                size={{
+                  base: "md",
+                  md: "xl",
+                }}
+              />
+            )}
+            {!user?.profilePic && (
+              <Avatar
+                name={user?.name}
+                src='https://bit.ly/broken-link'
+                size={{
+                  base: "md",
+                  md: "xl",
+                }}
+              />
+            )}
+          </Box>
+        </Flex>
+        <Text>
+          {user?.bio}
+        </Text>
+        {currentUser?._id === user?._id && (
+          <Link as={RouterLink} to='/update' w={"full"}>
+            <Button size={"sm"} w={"full"} colorScheme={"dark"} border={"1px"} borderColor={"gray.light"} _hover={{ opacity: ".8" }} py={4}>
+              <Text fontSize={"sm"} color={"white"} fontWeight={"bold"}>
+                Edit Profile
+              </Text>
+            </Button>
+          </Link>
+        )}
+        {currentUser?._id !== user?._id && (
+          <Button size={"sm"} onClick={handleFollowUnfollow} isLoading={updating}>{following ? "Unfollow" : "Follow"}</Button>
+        )}
+        <Flex w={"full"} justifyContent={"space-between"}>
           <Flex gap={2} alignItems={"center"}>
-            <Text fontSize={{ base: "sm", md: "md" }}>{user?.username}</Text>
-            <Text fontSize={"xs"} bg={"gray.dark"} color={"gray.light"} p={1} borderRadius={"full"} >threads.net</Text>
+            <Text fontSize={"md"} color={"gray.light"}>{user?.followers?.length} followers</Text>
+            <Box w='1' h='1' bg={"gray.light"} borderRadius={"full"}></Box>
+            <Link color={"gray.light"}>Instagram</Link>
           </Flex>
-        </Box>
-        <Box>
-          {user?.profilePic && (
-            <Avatar
-              name={user?.name}
-              src={user?.profilePic}
-              size={{
-                base: "md",
-                md: "xl",
-              }}
-            />
-          )}
-          {!user?.profilePic && (
-            <Avatar
-              name={user?.name}
-              src='https://bit.ly/broken-link'
-              size={{
-                base: "md",
-                md: "xl",
-              }}
-            />
-          )}
-        </Box>
-      </Flex>
-      <Text>
-        {user?.bio}
-      </Text>
-      {currentUser?._id === user?._id && (
-        <Link as={RouterLink} to='/update'>
-          <Button size={"sm"}>Update Profile</Button>
-        </Link>
-      )}
-      {currentUser?._id !== user?._id && (
-        <Button size={"sm"} onClick={handleFollowUnfollow} isLoading={updating}>{following ? "Unfollow" : "Follow"}</Button>
-      )}
-      <Flex w={"full"} justifyContent={"space-between"}>
-        <Flex gap={2} alignItems={"center"}>
-          <Text fontSize={"sm"} color={"gray.light"}>{user?.followers?.length} followers</Text>
-          <Box w='1' h='1' bg={"gray.light"} borderRadius={"full"}></Box>
-          <Link color={"gray.light"}>Instagram</Link>
+          <Flex>
+            <Box className='icon-container'>
+              <BsInstagram size={24} cursor={"pointer"} />
+            </Box>
+            <Box className='icon-container'>
+              <Menu>
+                <MenuButton>
+                  <CgMoreO size={24} cursor={"pointer"} />
+                </MenuButton>
+                <Portal>
+                  <MenuList bg={"gray.dark"}>
+                    <MenuItem bg={"gray.dark"} onClick={copyUrl}>Copy Link</MenuItem>
+                  </MenuList>
+                </Portal>
+              </Menu>
+            </Box>
+          </Flex>
         </Flex>
-        <Flex>
-          <Box className='icon-container'>
-            <BsInstagram size={24} cursor={"pointer"} />
-          </Box>
-          <Box className='icon-container'>
-            <Menu>
-              <MenuButton>
-                <CgMoreO size={24} cursor={"pointer"} />
-              </MenuButton>
-              <Portal>
-                <MenuList bg={"gray.dark"}>
-                  <MenuItem bg={"gray.dark"} onClick={copyUrl}>Copy Link</MenuItem>
-                </MenuList>
-              </Portal>
-            </Menu>
-          </Box>
+        <Flex w={"full"}>
+          <Flex flex={1} borderBottom={"1.5px solid white"} justifyContent={"center"} pb={3} cursor={"pointer"} >
+            <Text fontWeight={"bold"}>Threads</Text>
+          </Flex>
+          <Flex flex={1} borderBottom={"1px solid gray"} justifyContent={"center"} color={"gray.light"} pb={3} cursor={"pointer"} >
+            <Text fontWeight={"bold"}>Replies</Text>
+          </Flex>
         </Flex>
-      </Flex>
-      <Flex w={"full"}>
-        <Flex flex={1} borderBottom={"1.5px solid white"} justifyContent={"center"} pb={3} cursor={"pointer"} >
-          <Text fontWeight={"bold"}>Threads</Text>
-        </Flex>
-        <Flex flex={1} borderBottom={"1px solid gray"} justifyContent={"center"} color={"gray.light"} pb={3} cursor={"pointer"} >
-          <Text fontWeight={"bold"}>Replies</Text>
-        </Flex>
-      </Flex>
-    </VStack>
+      </VStack >
+    </>
   )
 }
 

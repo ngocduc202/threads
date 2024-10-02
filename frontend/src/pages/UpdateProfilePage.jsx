@@ -9,6 +9,7 @@ import {
   useColorModeValue,
   Avatar,
   Center,
+  Text,
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -60,15 +61,15 @@ export default function UpdateProfilePage() {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <Flex align={"center"} justify={"center"} my={6}>
+      <Flex align={"center"} justify={"center"} my={{ base: 0, md: 6 }} >
         <Stack
           spacing={4}
           w={"full"}
           maxW={"md"}
           bg={useColorModeValue("white", "gray.dark")}
-          rounded={"xl"}
           boxShadow={"lg"}
           p={6}
+          borderRadius={{ base: "none", md: "3xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }}
         >
           <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
             User Profile Edit
@@ -79,8 +80,14 @@ export default function UpdateProfilePage() {
                 <Avatar size='xl' boxShadow={"md"} src={imgUrl || user.profilePic} />
               </Center>
               <Center w='full'>
-                <Button w='full' onClick={() => fileRef.current.click()}>
-                  Change Avatar
+                <Button
+                  w='full'
+                  onClick={() => fileRef.current.click()}
+                  size={"sm"} colorScheme={"dark"} border={"1px"} borderColor={"gray.light"} _hover={{ opacity: ".8" }} py={4}
+                >
+                  <Text fontSize={"sm"} color={"white"} fontWeight={"bold"}>
+                    Change Avatar
+                  </Text>
                 </Button>
                 <Input type='file' hidden ref={fileRef} onChange={handleImageChange} />
               </Center>
@@ -138,21 +145,11 @@ export default function UpdateProfilePage() {
           </FormControl>
           <Stack spacing={6} direction={["column", "row"]}>
             <Button
-              bg={"red.400"}
-              color={"white"}
+              bg={"white"}
+              color={"black"}
               w='full'
               _hover={{
-                bg: "red.500",
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              bg={"green.400"}
-              color={"white"}
-              w='full'
-              _hover={{
-                bg: "green.500",
+                opacity: ".8",
               }}
               type='submit'
               isLoading={updating}
