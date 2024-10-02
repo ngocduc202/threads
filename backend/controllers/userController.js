@@ -241,3 +241,19 @@ export const freezeAccount = async (req, res) => {
   }
 }
 
+export const detailUsers = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: "No user IDs provided" });
+    }
+
+    const users = await User.find({ _id: { $in: ids } }).select('-password'); // Loại bỏ password khỏi kết quả
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+}

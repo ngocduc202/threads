@@ -46,10 +46,10 @@ const UserPage = () => {
   if (!user && !loading) return <h1>User not found</h1>
   return (
     <>
-      <Text fontWeight={"bold"} fontSize={{ base: "md", md: "xl" }} textAlign={"center"} w={"full"} pt={2} mb={4}>
+      <Text fontWeight={"bold"} fontSize={{ base: "md", md: "xl" }} textAlign={"center"} w={"full"} pt={2} mb={4} display={{ base: "none", md: "block" }}>
         Profile
       </Text>
-      <Box borderRadius={{ base: "none", md: "3xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={useColorModeValue("gray.200", "gray.dark")} p={6} >
+      <Box borderRadius={{ base: "none", md: "3xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={{ base: "none", md: useColorModeValue("gray.200", "gray.dark") }} p={6} >
         <UserHeader user={user} />
         {!fetchingPost && posts?.length === 0 && <h1>User has no posts.</h1>}
         {fetchingPost && (

@@ -8,8 +8,8 @@ const SuggestedUser = ({ user }) => {
   const { following, handleFollowUnfollow, updating } = useFollowUnfollow(user)
   return (
     <>
-      <Flex gap={2} justifyContent={"space-between"} alignItems={"center"}>
-        <Flex gap={2} as={Link} to={`${user?.username}`}>
+      <Flex gap={3} justifyContent={"space-between"} alignItems={"center"}>
+        <Flex gap={3} as={Link} to={`/${user?.username}`}>
           <Avatar src={user?.profilePic} />
           <Box>
             <Text fontSize={"sm"} fontWeight={"bold"}>
@@ -22,9 +22,10 @@ const SuggestedUser = ({ user }) => {
         </Flex>
         <Button
           size={"sm"}
-          color={following ? "black" : "white"}
-          bg={following ? "white" : "blue.400"}
+          colorScheme={following ? "black" : "gray"}
+          bg={following ? "white" : "gray.dark"}
           onClick={handleFollowUnfollow}
+          border={"1px solid gray"}
           isLoading={updating}
           _hover={{
             color: following ? "black" : "white",

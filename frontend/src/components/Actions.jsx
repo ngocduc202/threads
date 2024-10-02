@@ -113,8 +113,6 @@ const Actions = ({ post }) => {
 
 
 
-  console.log("post ", post)
-
   return (
     <Flex flexDirection={"column"}>
       <Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
