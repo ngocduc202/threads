@@ -81,7 +81,7 @@ export default function LoginCard() {
         align={'center'}
         justify={'center'}
       >
-        <Stack mx={'auto'} maxW={'lg'} py={{ base: 12, md: "200px" }} px={3}>
+        <Stack mx={'auto'} maxW={'lg'} mt={{ base: 12, md: "200px" }} px={3}>
           <Stack align={'center'}>
             <Heading fontSize={'2xl'} textAlign={'center'}>
               Login

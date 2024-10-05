@@ -1,10 +1,10 @@
 import { Avatar, Box, Button, Divider, Flex, FormControl, Image, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useColorModeValue, useDisclosure } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import React, { useState } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../hooks/useShowToast'
 import postsAtom from '../atoms/postAtom';
-import { BsFillImageFill } from 'react-icons/bs';
+import { formatDistanceToNow } from 'date-fns';
 
 const Actions = ({ post }) => {
   const user = useRecoilValue(userAtom)
@@ -111,7 +111,7 @@ const Actions = ({ post }) => {
     }
   }
 
-
+  console.log(userPost)
 
   return (
     <Flex flexDirection={"column"}>
@@ -172,7 +172,10 @@ const Actions = ({ post }) => {
               <Flex gap={3} textAlign={"left"} >
                 <Avatar name={userPost?.username} src={userPost?.profilePic} size={"md"} />
                 <Box>
-                  <Text fontWeight={"bold"}>{userPost?.username}</Text>
+                  <Flex alignItems={"center"} gap={3}>
+                    <Text fontWeight={"bold"}>{userPost?.username}</Text>
+                    {userPost?.createdAt && <Text fontSize={"xs"} w={36} color={"gray.light"}>{formatDistanceToNow(new Date(userPost?.createdAt))} ago</Text>}
+                  </Flex>
                   <Text>{post?.text}</Text>
                   {post?.img && (
                     <Image src={post?.img} alt='post img' borderRadius={"xl"} w={"400px"} h={"200px"} mt={3} />

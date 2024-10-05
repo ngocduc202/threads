@@ -82,7 +82,7 @@ export default function SignupCard() {
         align={'center'}
         justify={'center'}
       >
-        <Stack mx={'auto'} maxW={'lg'} py={{ base: 12, md: "150px" }} px={3}>
+        <Stack mx={'auto'} maxW={'lg'} mt={{ base: 12, md: "150px" }} px={3}>
           <Stack align={'center'}>
             <Heading fontSize={'2xl'} textAlign={'center'}>
               Sign up

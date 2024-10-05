@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UserHeader from '../components/UserHeader'
 import { useParams } from 'react-router-dom'
 import useShowToast from '../hooks/useShowToast'
-import { Box, Flex, Spinner, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Container, Flex, Spinner, Text, useColorModeValue } from '@chakra-ui/react'
 import Post from '../components/Post'
 import useGetUserProfile from '../hooks/useGetUserProfile'
 import { useRecoilState } from 'recoil'
@@ -45,11 +45,23 @@ const UserPage = () => {
   }
   if (!user && !loading) return <h1>User not found</h1>
   return (
-    <>
-      <Text fontWeight={"bold"} fontSize={{ base: "md", md: "xl" }} textAlign={"center"} w={"full"} pt={2} mb={4} display={{ base: "none", md: "block" }}>
+    <Container w={"full"} maxW={"100%"} h={"full"}>
+      <Text
+        fontWeight={"bold"}
+        fontSize={{ base: "md", md: "xl" }}
+        textAlign={"center"} w={"full"}
+        pt={2} mb={4}
+        pb={3}
+        position={"fixed"}
+        top={0}
+        left={0}
+        right={0}
+        zIndex={2}
+        background={useColorModeValue("white", "black")}
+      >
         Profile
       </Text>
-      <Box borderRadius={{ base: "none", md: "3xl" }} border={{ base: "none", md: "1px" }} borderColor={{ base: "none", md: "gray.600" }} bg={{ base: "none", md: useColorModeValue("gray.200", "gray.dark") }} p={6} >
+      <Box p={6} mt={2} >
         <UserHeader user={user} />
         {!fetchingPost && posts?.length === 0 && <h1>User has no posts.</h1>}
         {fetchingPost && (
@@ -64,7 +76,7 @@ const UserPage = () => {
           <Post key={post._id} post={post} postedBy={post?.postedBy} />
         ))}
       </Box>
-    </>
+    </Container>
   )
 }
 

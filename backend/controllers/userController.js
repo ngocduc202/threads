@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs"
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js"
 import {v2 as cloudinary} from 'cloudinary'
 import Post from "../models/postModel.js"
+import Notification from "../models/notificationModel.js"
 import mongoose from "mongoose"
 
 
@@ -132,6 +133,14 @@ export const followUnfollowUser = async (req, res) => {
       //Follow
       await User.findByIdAndUpdate(req.user._id , {$push: { following: id }})
       await User.findByIdAndUpdate(id , {$push: { followers: req.user._id }})
+      const newNotification = new Notification({
+				type: "follow",
+				from: req.user._id,
+				to: userToModify._id,
+			});
+
+			await newNotification.save();
+
       res.status(200).json({ message: "Followed successfully" })
     }
   } catch (error) {

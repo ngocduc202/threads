@@ -11,13 +11,14 @@ import userAtom from "./atoms/userAtom"
 import UpdateProfilePage from "./pages/UpdateProfilePage"
 import ChatPage from "./pages/ChatPage"
 import SettingsPage from "./components/SettingsPage"
+import NotificationPage from "./pages/NotificationPage"
 
 function App() {
   const user = useRecoilValue(userAtom)
   const { pathname } = useLocation()
   return (
-    <Box position={"relative"} w={'full'}>
-      <Container maxW={pathname === "/" ? { base: "650px", md: "900px" } : "650px"} p={0} >
+    <Box position={"relative"} w={'full'} >
+      <Container maxW={pathname === "/" ? { base: "650px", md: "900px" } : "650px"} p={0}  >
         <Header />
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <Navigate to={"/auth"} />} />
@@ -35,6 +36,7 @@ function App() {
             )} />
           <Route path="/:username/post/:pid" element={<PostPage />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />
+          <Route path="/notifications" element={user ? <NotificationPage /> : <Navigate to={"/auth"} />} />
           <Route path="/settings" element={user ? <SettingsPage /> : <Navigate to={"/auth"} />} />
         </Routes>
         <Box w={"full"} h={"50px"} />

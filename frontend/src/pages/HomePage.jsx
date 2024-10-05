@@ -40,7 +40,7 @@ const HomePage = () => {
 
   return (
     <Flex gap="10" alignItems="flex-start" p={6}>
-      <Box flex={70} border={{ base: "none", md: "1px" }} borderRadius={{ base: "none", md: "2xl" }} borderColor={{ base: "none", md: "gray.600" }} p={{ base: 0, md: 6 }} bg={{ base: "none", md: "dark" }} >
+      <Box flex={70} p={{ base: 0, md: 6 }} bg={{ base: "none", md: "dark" }} >
         <Flex gap={3} alignItems={"center"} justifyItems={"center"} my={2} justifyContent={"space-between"}>
           <Flex gap={3} alignItems={"center"} justifyItems={"center"}>
             <Avatar src={user?.profilePic} size={"md"} />

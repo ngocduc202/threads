@@ -68,7 +68,7 @@ const Header = () => {
               <Link as={RouterLink} to={`/${user.username}`}>
                 <IoSearch size={30} />
               </Link>
-              <Link as={RouterLink} to={`/${user.username}`}>
+              <Link as={RouterLink} to={"/notifications"}>
                 <CiHeart size={30} />
               </Link>
               <CreatePost />
@@ -103,7 +103,7 @@ const Header = () => {
                         </Flex>
                       </Link>
                     </Button>
-                    <Button size={"xs"} onClick={logout} w={"100%"} h={"40px"}>
+                    <Button size={"xs"} onClick={() => { logout(); onClose() }} w={"100%"} h={"40px"} >
                       <Flex gap={2} align={"center"}>
                         <FiLogOut size={20} />
                         <Text fontWeight={"bold"} fontSize={"sm"}>
