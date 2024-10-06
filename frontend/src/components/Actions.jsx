@@ -111,7 +111,7 @@ const Actions = ({ post }) => {
     }
   }
 
-  console.log(userPost)
+
 
   return (
     <Flex flexDirection={"column"}>

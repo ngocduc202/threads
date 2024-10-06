@@ -13,9 +13,11 @@ import ChatPage from "./pages/ChatPage"
 import SettingsPage from "./components/SettingsPage"
 import NotificationPage from "./pages/NotificationPage"
 
+
 function App() {
   const user = useRecoilValue(userAtom)
   const { pathname } = useLocation()
+
   return (
     <Box position={"relative"} w={'full'} >
       <Container maxW={pathname === "/" ? { base: "650px", md: "900px" } : "650px"} p={0}  >

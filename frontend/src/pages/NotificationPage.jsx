@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom'
 import useShowToast from '../hooks/useShowToast'
 import { FaUser, FaHeart } from 'react-icons/fa'
 import { formatDistanceToNow } from 'date-fns'
+import { useRecoilValue } from 'recoil'
+import userAtom from '../atoms/userAtom'
+import { DeleteIcon } from '@chakra-ui/icons'
 
 
 const NotificationPage = () => {
@@ -11,6 +14,7 @@ const NotificationPage = () => {
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(true)
   const showToast = useShowToast()
+  const currentUser = useRecoilValue(userAtom)
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -32,6 +36,24 @@ const NotificationPage = () => {
 
     getNotifications()
   }, [showToast])
+
+  const deleteNotification = async (notificationId) => {
+    try {
+      const res = await fetch(`/api/notifications/${notificationId}`, {
+        method: "DELETE",
+      })
+      const data = await res.json()
+      if (data.error) {
+        showToast("Error", data.error, "error")
+        return
+      }
+      showToast("Success", "Notification deleted successfully", "success")
+      setNotifications(notifications.filter((notification) => notification._id !== notificationId))
+    } catch (error) {
+      showToast("Error", error.message, "error")
+    }
+  }
+
   return (
     <>
       <Text fontWeight={"bold"} fontSize={{ base: "md", md: "xl" }} textAlign={"center"} w={"full"} pt={2} mb={4} >
@@ -58,7 +80,7 @@ const NotificationPage = () => {
           <Text
             fontSize={"md"}
             fontWeight={"bold"}>
-            No Notifications
+            No notifications 🤔
           </Text>
         </Box>
       )}
@@ -67,21 +89,32 @@ const NotificationPage = () => {
         >
           {notifications?.map((notification) => (
             <>
-              <Flex gap={3} textAlign={"left"} key={notification?._id} ml={3} mt={5}>
-                <Avatar src={notification?.from?.profilePic} size={"md"} name={notification?.from?.username} />
-                <Box>
-                  <Link to={`/${notification?.from?.username}`}>
-                    <Flex textAlign={"left"} alignItems={"center"} gap={3}>
-                      <Text fontWeight={"bold"}>{notification?.from?.username}</Text>
-                      <Text fontSize={"xs"} w={36} color={"gray.light"}>{formatDistanceToNow(new Date(notification?.createdAt))} ago</Text>
+              <Flex gap={3} textAlign={"left"} key={notification?._id} ml={3} mt={5} justify={"space-between"}>
+                <Flex gap={2} alignItems={"center"}>
+                  <Avatar src={notification?.from?.profilePic} size={"md"} name={notification?.from?.username} />
+                  <Box>
+                    <Link to={`/${notification?.from?.username}`}>
+                      <Flex textAlign={"left"} alignItems={"center"} gap={3}>
+                        <Text fontWeight={"bold"}>{notification?.from?.username}</Text>
+                        <Text fontSize={"xs"} w={36} color={"gray.light"}>{formatDistanceToNow(new Date(notification?.createdAt))} ago</Text>
+                      </Flex>
+                    </Link>
+                    <Flex gap={3} alignItems={"center"} justifyItems={"center"}>
+                      {notification?.type === "follow" ? (
+                        <Text fontSize={"sm"} textColor={"gray.light"}>started following you</Text>
+                      ) : notification?.type === "like" ? (
+                        <Text fontSize={"md"} textColor={"gray.light"}>liked your post</Text>
+                      ) : notification?.type === "reply" ? (
+                        <Link to={`/${currentUser?.username}/post/${notification?.postId}`} style={{ width: "100%" }}>
+                          <Text fontSize={"md"} textColor={"gray.light"}>replied: {notification?.text}</Text>
+                        </Link>
+                      ) : null}
+                      {notification?.type === "like" && <FaHeart size={15} color='red' />}
+                      {notification?.type === "follow" && <FaUser size={15} color='blue' />}
                     </Flex>
-                  </Link>
-                  <Flex gap={3} alignItems={"center"} justifyItems={"center"}>
-                    {notification?.type === "follow" ? <Text fontSize={"sm"} textColor={"gray.light"}>started following you</Text> : <Text fontSize={"md"} textColor={"gray.light"}>liked your post</Text>}
-                    {notification?.type === "like" && <FaHeart size={15} color='red' />}
-                    {notification?.type === "follow" && <FaUser size={15} color='blue' />}
-                  </Flex>
-                </Box>
+                  </Box>
+                </Flex>
+                <DeleteIcon size={20} onClick={() => deleteNotification(notification?._id)} cursor={"pointer"} mr={3} />
               </Flex>
               <Divider my={1} mt={5} />
             </>

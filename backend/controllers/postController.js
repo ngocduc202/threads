@@ -137,6 +137,15 @@ export const replyToPost = async (req, res) => {
     }
 
     const reply = {userId, userProfilePic, username, text}
+    const notification = new Notification({
+      from: userId,
+      to: post.postedBy,
+      type: "reply",
+      postId: postId,
+      text: reply.text
+    });
+
+    await notification.save();
     post.replies.push(reply)
 
     await post.save()

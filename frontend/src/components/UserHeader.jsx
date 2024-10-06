@@ -58,7 +58,6 @@ const UserHeader = ({ user }) => {
     }
   };
 
-  console.log(activeTab, "active tab")
 
   return (
     <>
