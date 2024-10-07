@@ -31,10 +31,15 @@ export const signupUser = async (req, res) => {
     if (!name || !email || !username || !password) {
       return res.status(400).json({error: "Please enter all fields"})
     }
-    const user = await User.findOne({$or: [{email}, {username}]})
 
+    const user = await User.findOne({$or: [{email}, {username}]})
     if(user) {
       return res.status(400).json({error: "User already exists"})
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
     }
 
     const salt = await bcrypt.genSalt(10)
