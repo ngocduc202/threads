@@ -35,7 +35,7 @@ function App() {
             )
             :
             (
-              <UserPage />
+              <Navigate to={"/auth"} />
             )} />
           <Route path="/:username/post/:pid" element={<PostPage />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />

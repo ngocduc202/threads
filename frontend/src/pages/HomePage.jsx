@@ -19,7 +19,7 @@ const HomePage = () => {
       setLoading(true)
       setPosts([])
       try {
-        const res = await fetch('/api/posts/feed')
+        const res = await fetch('/api/posts/allFeed')
         const data = await res.json()
 
         if (data.error) {
@@ -51,9 +51,9 @@ const HomePage = () => {
 
         <Divider mt={5} w={"full"} />
 
-        {!loading && posts.length === 0 && (
+        {/* {!loading && posts.length === 0 && (
           <h1>Follow some users to see their posts</h1>
-        )}
+        )} */}
         {loading && (
           <Flex justify={"center"}>
             <Spinner

@@ -186,7 +186,7 @@ const UserHeader = ({ user }) => {
                           </>
                         ))
                       ) : (
-                        <Text>No followers to display.</Text>
+                        <Text>No followers.</Text>
                       )}
                     </TabPanel>
                     <TabPanel>
@@ -198,7 +198,7 @@ const UserHeader = ({ user }) => {
                           </>
                         ))
                       ) : (
-                        <Text>No following to display.</Text>
+                        <Text>No following.</Text>
                       )}
                     </TabPanel>
                   </TabPanels>

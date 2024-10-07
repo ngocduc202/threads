@@ -28,6 +28,9 @@ export const getUserProfile = async (req, res) => {
 export const signupUser = async (req, res) => {
   try {
     const { name , email , username , password} = req.body
+    if (!name || !email || !username || !password) {
+      return res.status(400).json({error: "Please enter all fields"})
+    }
     const user = await User.findOne({$or: [{email}, {username}]})
 
     if(user) {

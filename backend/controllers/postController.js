@@ -176,6 +176,17 @@ export const getFeedPosts = async (req, res) => {
   }
 }
 
+export const getAllPost = async (req, res) => {
+  try {
+    const posts = await Post.find().sort({createdAt: -1})
+    res.status(200).json(posts)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+    console.log("Error in getAllPost: ", error.message)
+  }
+}
+
+
 export const getUserPosts = async (req, res) => {
   const {username} = req.params
   try {
