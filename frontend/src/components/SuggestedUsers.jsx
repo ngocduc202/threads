@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import SuggestedUser from './SuggestedUser'
 import useShowToast from '../hooks/useShowToast'
 
-const SuggestedUsers = () => {
+const SuggestedUsers = (isDivider) => {
 
   const [loading, setLoading] = useState(true)
   const [suggestedUsers, setSuggestedUsers] = useState([])
@@ -37,7 +37,7 @@ const SuggestedUsers = () => {
         Suggested Users
       </Text>
       <Flex direction={"column"} gap={4}>
-        {!loading && suggestedUsers?.map((user) => <SuggestedUser key={user._id} user={user} />)}
+        {!loading && suggestedUsers?.map((user) => <SuggestedUser key={user._id} user={user} isDivider={isDivider} />)}
         {loading &&
           [0, 1, 2, 3, 4].map((_, idx) => (
             <Flex key={idx} gap={2} alignItems={"center"} p={"1"} borderRadius={"md"}>

@@ -5,6 +5,7 @@ import {v2 as cloudinary} from 'cloudinary'
 import Post from "../models/postModel.js"
 import Notification from "../models/notificationModel.js"
 import mongoose from "mongoose"
+import {faker} from "@faker-js/faker"
 
 
 export const getUserProfile = async (req, res) => {
@@ -264,5 +265,47 @@ export const detailUsers = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
+  }
+}
+
+export const searchUser = async (req, res) => {
+  try {
+    const {username , name} = req.query
+    const searchCriteria = {};
+    if (username) {
+      searchCriteria.username = { $regex: username, $options: 'i' }; // Tìm kiếm không phân biệt hoa thường
+    }
+    if (name) {
+      searchCriteria.name = { $regex: name, $options: 'i' };
+    }
+    const users = await User.find(searchCriteria).select('-password');
+    res.status(200).json(users)
+  } catch (error) {
+    console.log("Error in searchUser: ", error.message);
+    res.status(500).json({ error: error.message });
+  }
+}
+
+export const InsertUser = async (req, res) => {
+  const num = 10
+  const users = [];
+  for (let i = 0; i < num; i++) {
+    users.push({
+      username: faker.internet.userName(),
+      name: faker.person.fullName(),
+      password: "123456",
+      email: faker.internet.email(),
+      profilePic: faker.image.url(),
+      bio: faker.person.bio(),
+      followers: [],
+      following: [],
+      isFrozen: false
+    });
+  }
+  try {
+    await User.insertMany(users);
+    res.status(201).json({ message: 'Fake users created successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Error creating fake users', details: err });
   }
 }

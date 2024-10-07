@@ -65,7 +65,7 @@ const Header = () => {
               <Link as={RouterLink} to={"/"}>
                 <AiFillHome size={30} />
               </Link>
-              <Link as={RouterLink} to={`/${user.username}`}>
+              <Link as={RouterLink} to={"/search"}>
                 <IoSearch size={30} />
               </Link>
               <Link as={RouterLink} to={"/notifications"}>

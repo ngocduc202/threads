@@ -4,7 +4,9 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import useShowToast from '../hooks/useShowToast'
 import postsAtom from '../atoms/postAtom';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, set } from 'date-fns';
+import Picker from '@emoji-mart/react'
+import data from '@emoji-mart/data'
 
 const Actions = ({ post }) => {
   const user = useRecoilValue(userAtom)
@@ -15,6 +17,7 @@ const Actions = ({ post }) => {
   const [isReplying, setIsReplying] = useState(false)
   const [isLiking, setIsLiking] = useState(false)
   const [userPost, setUserPost] = useState(null)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure()
 
 
@@ -88,6 +91,7 @@ const Actions = ({ post }) => {
       showToast("Success", "Reply posted successfully", "success")
       onClose()
       setReply("")
+      setShowEmojiPicker(false)
     } catch (error) {
       showToast("Error", error.message, "error")
     } finally {
@@ -111,7 +115,9 @@ const Actions = ({ post }) => {
     }
   }
 
-
+  const handleEmojiSelect = (emoji) => {
+    setReply(prev => prev + emoji.native);
+  }
 
   return (
     <Flex flexDirection={"column"}>
@@ -202,6 +208,11 @@ const Actions = ({ post }) => {
                   <Button size={"lg"} onClick={() => setShowEmojiPicker((prev) => !prev)} bg={"none"} _hover={"none"} display={{ base: "none", md: "block" }} >
                     😊
                   </Button>
+                  {showEmojiPicker && (
+                    <Box w={"200px"} h={"200px"} position={"absolute"} bottom={"-153px"} right={"200px"} zIndex={10}>
+                      <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+                    </Box>
+                  )}
                 </FormControl>
               </Flex>
             </Box>

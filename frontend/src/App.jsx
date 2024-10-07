@@ -12,6 +12,7 @@ import UpdateProfilePage from "./pages/UpdateProfilePage"
 import ChatPage from "./pages/ChatPage"
 import SettingsPage from "./components/SettingsPage"
 import NotificationPage from "./pages/NotificationPage"
+import SearchPage from "./pages/SearchPage"
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
             )} />
           <Route path="/:username/post/:pid" element={<PostPage />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />
+          <Route path="/search" element={user ? <SearchPage /> : <Navigate to={"/auth"} />} />
           <Route path="/notifications" element={user ? <NotificationPage /> : <Navigate to={"/auth"} />} />
           <Route path="/settings" element={user ? <SettingsPage /> : <Navigate to={"/auth"} />} />
         </Routes>

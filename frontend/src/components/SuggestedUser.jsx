@@ -1,9 +1,9 @@
-import { Avatar, Box, Button, Flex, Text } from '@chakra-ui/react'
+import { Avatar, Box, Button, Divider, Flex, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import useFollowUnfollow from '../hooks/useFollowUnfollow'
 
-const SuggestedUser = ({ user }) => {
+const SuggestedUser = ({ user, isDivider }) => {
 
   const { following, handleFollowUnfollow, updating } = useFollowUnfollow(user)
   return (
@@ -35,6 +35,7 @@ const SuggestedUser = ({ user }) => {
           {following ? "Unfollow" : "Follow"}
         </Button>
       </Flex>
+      {isDivider ? <Divider /> : null}
     </>
   )
 }
