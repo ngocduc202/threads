@@ -33,13 +33,13 @@ const Conversation = ({ conversation, isOnline }) => {
       bg={selectedConversation?._id === conversation._id ? (colorMode === "light" ? "gray.400" : "gray.dark") : ""}
     >
       <WrapItem>
-        <Avatar size={{ base: "xs", sm: "sm", md: "md" }} src={user?.profilePic} >
+        <Avatar size={{ base: "sm", sm: "sm", md: "md" }} src={user?.profilePic} >
           {isOnline ? <AvatarBadge boxSize="1em" bg="green.500" /> : ""}
         </Avatar>
       </WrapItem>
 
       <Stack direction={"column"} fontSize={"sm"}>
-        <Text fontWeight={'700'} display={"flex"} alignItems={"center"}>
+        <Text fontWeight={'700'} display={"flex"} alignItems={"center"} fontSize={"sm"}>
           {user?.username} <Image src='/verified.png' w={4} h={4} ml={1} />
         </Text>
         <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1} >

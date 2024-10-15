@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons'
-import { Box, Button, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Input, Skeleton, SkeletonCircle, Text, useColorModeValue } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
 import { GiConversation } from 'react-icons/gi'
 import Conversation from '../components/Conversation'
@@ -123,6 +123,7 @@ const ChatPage = () => {
       }}
       p={4}
       transform={"translateX(-50%)"}
+      mt={{ base: "1", md: "6" }}
     >
       <Flex
         gap={4}
@@ -131,7 +132,7 @@ const ChatPage = () => {
           md: "row",
         }}
         maxW={{
-          sm: "400px",
+          base: "full",
           md: "full",
         }}
         mx={'auto'}
@@ -140,10 +141,10 @@ const ChatPage = () => {
           gap={2}
           flexDirection={"column"}
           maxW={{
-            sm: "250px",
+            base: "full",
             md: "full",
           }}
-          mx={'auto'}
+          mx={{ base: "0", md: "auto" }}
         >
           <Text fontWeight={700} color={useColorModeValue("gray.600", "gray.400")}>
             Your Conversations
@@ -169,11 +170,14 @@ const ChatPage = () => {
               </Flex>
             ))
           )}
-          {!loadingConversations && (
-            conversations?.map((conversation) => (
-              <Conversation key={conversation._id} isOnline={onlineUsers?.includes(conversation?.participants[0]?._id)} conversation={conversation} />
-            ))
-          )}
+          <Box maxH={{ base: "100px", md: "600px" }} overflowY={"auto"} >
+            {!loadingConversations && (
+              conversations?.map((conversation) => (
+                <Conversation key={conversation._id} isOnline={onlineUsers?.includes(conversation?.participants[0]?._id)} conversation={conversation} />
+              ))
+            )}
+          </Box>
+          <Divider bg='gray.light' mt={1} display={{ base: "block", md: "none" }} />
         </Flex>
         {!selectedConversation._id && (
           <Flex
