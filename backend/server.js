@@ -9,10 +9,12 @@ import notificationRoutes from './routes/notificationRoutes.js'
 import {v2 as cloudinary} from 'cloudinary'
 import {app , server} from './socket/socket.js'
 import path from 'path'
+import job from './cron/cron.js'
 
 
 dotenv.config()
 connectDB()
+job.start()
 
 
 const PORT = process.env.PORT || 5000
