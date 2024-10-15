@@ -37,6 +37,27 @@ io.on("connection", (socket) => {
     }
   })
 
+  socket.on("newNotification", async ({ from, to, type, postId, text}) => {
+    try {
+      const notification = new Notification({
+        from,
+        to,
+        type,
+        postId,
+        text,
+      });
+
+      await notification.save();
+
+      const recipientSocketId = getRecipientSocketId(to);
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("newNotification", notification);
+      }
+    } catch (error) {
+      console.log("Error in newNotification event:", error);
+    }
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected" , socket.id)
     delete userSocketMap[userId]

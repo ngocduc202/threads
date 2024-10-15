@@ -13,11 +13,21 @@ import ChatPage from "./pages/ChatPage"
 import SettingsPage from "./components/SettingsPage"
 import NotificationPage from "./pages/NotificationPage"
 import SearchPage from "./pages/SearchPage"
+import useNotification from "./hooks/useNotification"
+import { useEffect } from "react"
+import useShowToast from "./hooks/useShowToast"
 
 
 function App() {
   const user = useRecoilValue(userAtom)
   const { pathname } = useLocation()
+  const { notifications } = useNotification(user?._id)
+  const showToast = useShowToast()
+  useEffect(() => {
+    if (notifications.length > 0) {
+      showToast("Notification", "You have new notifications", "info")
+    }
+  }, [notifications, showToast]);
 
   return (
     <Box position={"relative"} w={'full'} >

@@ -6,6 +6,7 @@ import Post from "../models/postModel.js"
 import Notification from "../models/notificationModel.js"
 import mongoose from "mongoose"
 import {faker} from "@faker-js/faker"
+import { getRecipientSocketId, io } from "../socket/socket.js"
 
 
 export const getUserProfile = async (req, res) => {
@@ -149,6 +150,11 @@ export const followUnfollowUser = async (req, res) => {
 			});
 
 			await newNotification.save();
+
+      const recipientSocketId = getRecipientSocketId(userToModify?._id);
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit("newNotification", newNotification);
+      }
 
       res.status(200).json({ message: "Followed successfully" })
     }

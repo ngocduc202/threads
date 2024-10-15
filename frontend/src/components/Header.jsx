@@ -1,5 +1,5 @@
-import { Button, Flex, Image, Link, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Text, useBreakpointValue, useColorMode, useDisclosure } from '@chakra-ui/react'
-import React from 'react'
+import { Badge, Button, Flex, Image, Link, Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger, Text, useBreakpointValue, useColorMode, useDisclosure } from '@chakra-ui/react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import { AiFillHome } from 'react-icons/ai'
@@ -14,12 +14,14 @@ import useLogout from '../hooks/useLogout'
 import authScreenAtom from '../atoms/authAtom'
 import { MdOutlineSettings } from 'react-icons/md'
 import CreatePost from './CreatePost'
+import useNotification from '../hooks/useNotification'
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const user = useRecoilValue(userAtom)
   const logout = useLogout()
-  const setAuthScreen = useSetRecoilState(authScreenAtom)
+  const { notifications } = useNotification(user?._id)
+  const [hasNewNotifications, setHasNewNotifications] = useState(false);
 
   const flexDirection = useBreakpointValue({ base: 'row', md: 'column' })
   const position = useBreakpointValue({ base: 'fixed', md: 'fixed' })
@@ -29,6 +31,16 @@ const Header = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+
+  useEffect(() => {
+    if (notifications.length > 0) {
+      setHasNewNotifications(true);  // Hiển thị chấm đỏ khi có thông báo mới
+    }
+  }, [notifications]);
+
+  const handleNotificationsClick = () => {
+    setHasNewNotifications(false);  // Ẩn chấm đỏ khi người dùng vào trang thông báo
+  };
   return (
     <>
       {user && (
@@ -68,8 +80,18 @@ const Header = () => {
               <Link as={RouterLink} to={"/search"}>
                 <IoSearch size={30} />
               </Link>
-              <Link as={RouterLink} to={"/notifications"}>
+              <Link as={RouterLink} to={"/notifications"} position="relative" onClick={handleNotificationsClick}>
                 <CiHeart size={30} />
+                {hasNewNotifications && (
+                  <Badge
+                    bg="#FF0000"
+                    borderRadius="full"
+                    position="absolute"
+                    top="0"
+                    right="0"
+                    boxSize="9px"
+                  />
+                )}
               </Link>
               <CreatePost />
               <Link as={RouterLink} to={`/${user.username}`}>
