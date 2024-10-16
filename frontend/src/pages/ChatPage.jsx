@@ -9,6 +9,8 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { conversationsAtom, selectedConversationAtom } from '../atoms/messagesAtom'
 import userAtom from '../atoms/userAtom'
 import { useSocket } from '../context/SocketContext'
+import { Link } from 'react-router-dom'
+import { FaArrowLeft } from 'react-icons/fa'
 
 const ChatPage = () => {
 
@@ -146,9 +148,16 @@ const ChatPage = () => {
           }}
           mx={{ base: "0", md: "auto" }}
         >
-          <Text fontWeight={700} color={useColorModeValue("gray.600", "gray.400")}>
-            Your Conversations
-          </Text>
+          <Flex gap={2} alignItems={"center"}>
+            <Box display={{ base: "block", md: "none" }}>
+              <Link to='/'>
+                <FaArrowLeft size={20} />
+              </Link>
+            </Box>
+            <Text fontWeight={700} color={useColorModeValue("gray.600", "gray.400")}>
+              Your Conversations
+            </Text>
+          </Flex>
           <form onSubmit={handleConversationSearch}>
             <Flex alignItems={"center"} gap={2}>
               <Input placeholder='Search for a user' onChange={(e) => setSearchText(e.target.value)} value={searchText} />

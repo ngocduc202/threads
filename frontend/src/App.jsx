@@ -1,5 +1,5 @@
 
-import { Box, Container } from "@chakra-ui/react"
+import { Box, Container, useMediaQuery } from "@chakra-ui/react"
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import UserPage from "./pages/UserPage"
 import PostPage from "./pages/PostPage"
@@ -23,6 +23,7 @@ function App() {
   const { pathname } = useLocation()
   const { notifications } = useNotification(user?._id)
   const showToast = useShowToast()
+  const [isMobile] = useMediaQuery("(max-width: 768px)")
   useEffect(() => {
     if (notifications.length > 0) {
       showToast("Notification", "You have new notifications", "info")
@@ -32,7 +33,7 @@ function App() {
   return (
     <Box position={"relative"} w={'full'} >
       <Container maxW={pathname === "/" ? { base: "650px", md: "900px" } : "650px"} p={0}  >
-        <Header />
+        {!(pathname === "/chat" && isMobile) && <Header />}
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <Navigate to={"/auth"} />} />
           <Route path="/auth" element={!user ? <AuthPage /> : <Navigate to={"/"} />} />
