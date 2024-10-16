@@ -33,7 +33,6 @@ function App() {
   return (
     <Box position={"relative"} w={'full'} >
       <Container maxW={pathname === "/" ? { base: "650px", md: "900px" } : "650px"} p={0}  >
-      //Fix for mobile
         {!(pathname === "/chat" && isMobile) && <Header />}
         <Routes>
           <Route path="/" element={user ? <HomePage /> : <Navigate to={"/auth"} />} />
